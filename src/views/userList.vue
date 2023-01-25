@@ -1,56 +1,51 @@
 <template>
-  <div class="app">
-    <div class="text-select box-left">
+  <div>
 
-        <h1>Bonjour <br/> <span class="name-title">{{ firstName }} {{ lastName }}</span></h1>
+    <div class="titleName"><h1>Bonjour {{ title }} {{ first }} {{ last }}</h1></div>
 
-        <p class="text-select">Séléctionner un nouveau profil à l'aide de cette liste : 
-            <select v-model="selected">
-            <option disabled value="">{{ selected }}</option>
-            <option @click="getUser()">{{ firstName }} {{ lastName }}</option>
-            </select>
-        </p>
-
-
-        <button class="btn-profil" @click="getUser()">Afficher sa photo de profil </button>
-
+    <div class="bloc-select">
+      <p class="text-select">Séléctionner un nouveau profil à l'aide de cette liste :</p>
+      <select class="s-user" v-model="selectedUser" @change="fetchData" name="randomuser">
+        <option v-for="user in users" :value="user.id" :key="user.id">{{ user.name.first }} {{ user.name.last }}</option>
+      </select>
     </div>
 
-    <div class="box-right">
-        <div class="profil-pict"></div>
-        <div class="angle-face"></div>
+    <div class="img-user">
+      <img v-bind:src="picture" :alt="`${first} ${last}`" />
     </div>
-    
 
+    <div class="btn-div">
+      <button class="btnSelect">Afficher sa photo de profil</button>
+    </div>
     
   </div>
 </template>
 
 <script>
-import img from "../assets/blueEyes.png";
+import axios from 'axios'
 export default {
   name: "App",
   components: {},
   data() {
-    return {
-      firstName: "Amir",
-      lastName: "Danish",
-      picture: img,
-    };
-  },
-  methods: {
-    async getUser() {
-      const res = await fetch("https://randomuser.me/api");
-      const { results } = await res.json();
-
-      // console.log(results)
-
-      this.firstName = results[0].name.first;
-      this.lastName = results[0].name.last;
-      this.picture = results[0].picture.large;
+      return {
+        selectedUser: '',
+        users: []
+      }
     },
-  },
-};
+    methods: {
+      fetchData() {
+        axios.get(`https://randomuser.me/api/?results=100`)
+          .then(response => {
+            this.users = response.data.results
+          })
+      }
+    },
+    created() {
+      this.fetchData()
+    }
+
+  
+}
 </script>
 
 <style>
@@ -98,5 +93,14 @@ h1{
     font-size: 45px;
     font-family: 'Roboto Slab', serif;
     color: #414047;
+}
+
+.bloc-select{
+  display:flex;
+}
+
+.s-user{
+  height: 22px;
+  margin: 17px;
 }
 </style>

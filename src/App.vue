@@ -1,14 +1,19 @@
 <script setup lang="ts">
 
 import userList from './views/userList.vue'
+
 </script>
 
 <template class="main-app">
   <userList />
       
-  <div class="angle-bgk"></div>
+  <div class="angle-bgk">
+
+  </div>
   
 </template>
+
+
 
 <style scoped>
 #app{
